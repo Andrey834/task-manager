@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-task-table
+      author: Andrey M
+      context: develop
+      changes:
+        - createTable:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: initiator_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_task_initiator_id
+                    referencedTableName: person
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: executor_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_task_executor_id
+                    referencedTableName: person
+                    referencedColumnNames: id
+                    nullable: true
+              - column:
+                  name: title
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority
+                  type: varchar(30)
+                  constraints:
+                    nullable: false

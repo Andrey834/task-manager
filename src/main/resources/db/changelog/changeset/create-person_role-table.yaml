@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-person_role-table
+      author: Andrey M
+      changes:
+        - createTable:
+            tableName: person_role
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: person_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_person_role_person_id
+                    referencedTableName: person
+                    referencedColumnNames: id
+                    deleteCascade: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(30)
+                  constraints:
+                    nullable: false

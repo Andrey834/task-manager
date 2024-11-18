@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: task-manager
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: ${TMS_PG_URL}
+    username: ${TMS_PG_USER}
+    password: ${TMS_PG_PASSWORD}
+  liquibase:
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+  data:
+    redis:
+      port: ${TMS_REDIS_PORT}
+      host: ${TMS_REDIS_HOST}
+      client-type: lettuce
+      password: ${TMS_REDIS_PASS}
+      lettuce:
+        pool:
+          max-active: 16
+      username: ${TMS_REDIS_USERNAME}
+    jdbc:
+      dialect: postgresql
+  docker:
+    compose:
+      enabled: false
+server:
+  port: ${TMS_PORT}
+  servlet:
+    context-path: ${TMS_CONTEXT_PATH}
+app:
+  jwt:
+    lifecycle:
+      access: ${TMS_LIFECYCLE_ACCESS}
+      refresh: ${TMS_LIFECYCLE_REFRESH}
+  rsa:
+    private-key: classpath:${TMS_PRIVATEKEY}
+    public-key: classpath:${TMS_PUBLICKEY}
+  admin:
+    secret: ${TMS_ADMIN_SECRET}

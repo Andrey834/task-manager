@@ -4,11 +4,13 @@ import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.em.taskmanager.model.Person;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface PersonDao extends ListCrudRepository<Person, Long> {
 
     boolean existsByEmail(String email);

@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.em.taskmanager.enums.ERole;
 import ru.em.taskmanager.handlers.AccessDeniedHandlerJwt;
-import ru.em.taskmanager.handlers.AuthenticationEntryPointJwt;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -20,14 +20,13 @@ import ru.em.taskmanager.handlers.AuthenticationEntryPointJwt;
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final AccessDeniedHandlerJwt accessDeniedHandlerJwt;
-    private final AuthenticationEntryPointJwt authenticationEntryPointJwt;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth ->
                         auth
-                                //.requestMatchers("/admin/**").hasRole(ERole.ADMIN.name())
+                                .requestMatchers("/admin/**").hasRole(ERole.ADMIN.name())
                                 .requestMatchers("/auth/signin").permitAll()
                                 .requestMatchers("/auth/signup").permitAll()
                                 .requestMatchers("/auth/refresh").permitAll()

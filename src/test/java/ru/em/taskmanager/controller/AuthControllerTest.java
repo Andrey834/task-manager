@@ -24,13 +24,13 @@ class AuthControllerTest {
     @InjectMocks
     private AuthController authController;
     private final String email = "test@email.com";
-    private final String password = "test";
-    private final Long personId = 1L;
+    private final String password = "test01";
 
     @Test
     void signup() {
-        String secret = "test";
+        String secret = "test01";
         SignupRequest signupRequest = new SignupRequest(email, password, secret);
+        Long personId = 1L;
         PersonDto expectedPersonDto = new PersonDto(personId, email, true);
 
         when(authService.signup(signupRequest)).thenReturn(expectedPersonDto);

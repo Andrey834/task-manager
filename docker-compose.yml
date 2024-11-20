@@ -4,8 +4,8 @@ services:
     container_name: tms-redis
     restart: unless-stopped
     ports:
-      - ${TMS_REDIS_PORT}:${TMS_REDIS_PORT}
-    command: redis-server --requirepass ${TMS_REDIS_PASSWORD}
+      - ${TMS_REDIS_PORT}:6379
+    command: 'redis-server --requirepass ${TMS_REDIS_PASSWORD}'
     environment:
       - REDIS_REPLICATION_MODE=master
     deploy:
@@ -23,16 +23,12 @@ services:
     image: postgres:latest
     container_name: tms-db
     restart: unless-stopped
-    networks:
-      - network
-    volumes:
-      - /var/docker/postgres/tms:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=${TMS_PG_DB}
       - POSTGRES_PASSWORD=${TMS_PG_PASSWORD}
       - POSTGRES_USER=${TMS_PG_USER}
     ports:
-      - ${TMS_PG_PORT}:${TMS_PG_PORT}
+      - ${TMS_PG_PORT}:5432
 
   tms:
     build: .
@@ -49,13 +45,12 @@ services:
     environment:
       - TMS_CONTEXT_PATH=${TMS_CONTEXT_PATH}
       - TMS_PORT=${TMS_PORT}
-      - TMS_PG_URL=jdbc:postgresql://tms-db:${TMS_PG_PORT}/${TMS_PG_DB}
+      - TMS_PG_URL=jdbc:postgresql://tms-db:5432/${TMS_PG_DB}
       - TMS_PG_USER=${TMS_PG_USER}
       - TMS_PG_PASSWORD=${TMS_PG_PASSWORD}
-      - TMS_REDIS_HOST=${TMS_REDIS_HOST}
-      - TMS_REDIS_USERNAME=${TMS_REDIS_USERNAME}
+      - TMS_REDIS_HOST=tms-redis
       - TMS_REDIS_PASSWORD=${TMS_REDIS_PASSWORD}
-      - TMS_REDIS_PORT=${TMS_REDIS_PORT}
+      - TMS_REDIS_PORT=6379
       - TMS_LIFECYCLE_ACCESS=${TMS_LIFECYCLE_ACCESS}
       - TMS_LIFECYCLE_REFRESH=${TMS_LIFECYCLE_REFRESH}
       - TMS_PRIVATEKEY=${TMS_PRIVATEKEY}

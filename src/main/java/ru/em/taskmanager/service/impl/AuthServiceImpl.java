@@ -31,8 +31,8 @@ public class AuthServiceImpl implements AuthService {
     private String adminSecret;
 
     @Override
-    public PersonDto signup(SignupRequest request) {
-        boolean admin = request.secret() != null && request.secret().equals(adminSecret);
+    public PersonDto signup( SignupRequest request) {
+        boolean admin = request.secret() != null  && adminSecret.length() > 6 && request.secret().equals(adminSecret);
 
         Person person = PersonMapper.toPerson(request);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
@@ -47,8 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
         final Person person = personService.get(signinRequest.email());
 
-        Tokens tokens = getTokens(person);
-        return tokens;
+        return getTokens(person);
     }
 
     @Override
@@ -61,8 +60,10 @@ public class AuthServiceImpl implements AuthService {
             final Person person = personService.get(email);
 
             return getTokens(person);
+        } else {
+            redisTemplate.delete(email);
+            throw new JwtException("Invalid JWT token");
         }
-        throw new JwtException("Invalid JWT token");
     }
 
     @Override

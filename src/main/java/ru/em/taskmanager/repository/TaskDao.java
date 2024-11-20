@@ -1,6 +1,5 @@
 package ru.em.taskmanager.repository;
 
-import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +12,8 @@ public interface TaskDao extends ListCrudRepository<Task, Long> {
 
     boolean existsById(Long taskId);
 
+    Optional<Task> findByExecutorId(Long executorId);
+
     @Query(value = "SELECT * " +
                    "FROM task " +
                    "WHERE (:initiatorId = 0 OR initiator_id = :initiatorId) " +
@@ -24,8 +25,6 @@ public interface TaskDao extends ListCrudRepository<Task, Long> {
                        @Param(value = "size") int size,
                        @Param(value = "initiatorId") Long initiatorId,
                        @Param(value = "executorId") Long executorId);
-
-    Optional<Task> findByExecutorId(Long executorId);
 
     @Query(value = "SELECT t.* " +
                    "FROM task t " +

@@ -13,7 +13,6 @@ import ru.em.taskmanager.repository.PersonDao;
 import ru.em.taskmanager.repository.PersonRoleDao;
 import ru.em.taskmanager.service.PersonService;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
     private final PersonDao personDao;
-    private final PersonRoleDao roleDao;
     private final PersonRoleDao personRoleDao;
 
     @Override
@@ -29,12 +27,12 @@ public class PersonServiceImpl implements PersonService {
         if (personDao.existsByEmail(person.getEmail())) {
             throw new DuplicateKeyException(person.getEmail() + " уже используется");
         } else {
-            Person newPerson = personDao.save(person);
+            final Person newPerson = personDao.save(person);
             if (admin) {
-                addAdminRole(newPerson);
+                addAdminRole(newPerson.getId());
             }
 
-            return personDao.save(person);
+            return newPerson;
         }
     }
 
@@ -44,7 +42,7 @@ public class PersonServiceImpl implements PersonService {
                 () -> new PersonNotFoundException("Пользователь не найден")
         );
 
-        Set<PersonRole> roles = roleDao.findAllByPersonId(person.getId());
+        Set<PersonRole> roles = personRoleDao.findAllByPersonId(person.getId());
         person.setAuthorities(roles);
 
         return person;
@@ -71,9 +69,9 @@ public class PersonServiceImpl implements PersonService {
         personDao.disabledPersons(ids);
     }
 
-    private void addAdminRole(Person person) {
+    private void addAdminRole(Long personId) {
         PersonRole role = PersonRole.builder()
-                .personId(person.getId())
+                .personId(personId)
                 .role(ERole.ADMIN)
                 .build();
         personRoleDao.save(role);

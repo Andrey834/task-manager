@@ -21,12 +21,8 @@ spring:
       lettuce:
         pool:
           max-active: 16
-      username: ${TMS_REDIS_USERNAME}
     jdbc:
       dialect: postgresql
-  docker:
-    compose:
-      enabled: false
 server:
   port: ${TMS_PORT}
   servlet:

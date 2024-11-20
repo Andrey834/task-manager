@@ -9,6 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -32,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final RedisTemplate<String, String> redisTemplate;
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
@@ -54,10 +56,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             final String accessToken = request.getHeader("Authorization").substring(prefixToken.length());
             if (isNotEmpty(accessToken)) {
                 final String email = jwtService.extractEmail(accessToken);
+                final boolean loggedIn = Boolean.TRUE.equals(redisTemplate.hasKey(email));
 
                 if (isNotEmpty(email)
                     && SecurityContextHolder.getContext().getAuthentication() == null
                     && jwtService.isTokenValid(accessToken)
+                    && loggedIn
                 ) {
                     final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                     SecurityContext context = SecurityContextHolder.createEmptyContext();

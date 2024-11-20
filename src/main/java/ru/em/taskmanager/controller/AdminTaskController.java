@@ -41,10 +41,10 @@ public class AdminTaskController {
     @Operation(summary = "Запрос списка задач в короткой форме с учетом пагинации и фильтрации")
     @GetMapping
     public ResponseEntity<List<TaskShortDto>> getAll(
-            @RequestParam(name = "executorId", defaultValue = "0", required = false) Long executorId,
-            @RequestParam(name = "initiatorId", defaultValue = "0", required = false) Long initiatorId,
             @RequestParam(name = "from", defaultValue = "0", required = false) @Min(0) int from,
-            @RequestParam(name = "size", defaultValue = "10", required = false) @Min(1) @Max(100) int size
+            @RequestParam(name = "size", defaultValue = "10", required = false) @Min(1) @Max(100) int size,
+            @RequestParam(name = "initiatorId", defaultValue = "0", required = false) Long initiatorId,
+            @RequestParam(name = "executorId", defaultValue = "0", required = false) Long executorId
     ) {
         return ResponseEntity.ok(adminTaskService.getAll(from, size, initiatorId, executorId));
     }

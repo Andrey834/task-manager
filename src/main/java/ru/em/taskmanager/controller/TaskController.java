@@ -26,7 +26,7 @@ public class TaskController {
 
     @Operation(summary = "Завершить выполнение назначенной задачи")
     @PatchMapping("/{taskId}/completed")
-    ResponseEntity<TaskDto> updateStatus(Principal principal,
+    ResponseEntity<TaskDto> completedTask(Principal principal,
                                          @PathVariable(name = "taskId") Long taskId) {
         return ResponseEntity
                 .ok(personTaskService.completedTask(principal.getName(), taskId));
